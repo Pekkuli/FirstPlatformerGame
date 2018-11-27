@@ -43,6 +43,8 @@ public class Game {
         VBox root = new VBox();
         HBox gameBox = new HBox();
 
+        HBox optionBox = new HBox();
+
         Canvas canvas = new Canvas(dimX,dimY);
         gameBox.getChildren().add(canvas);
         gameBox.setStyle("-fx-background-color: #08ff0a");
@@ -51,10 +53,30 @@ public class Game {
 
         gameScene = new Scene(root);
 
+        MediaPlayer music = new MediaPlayer(new Media(getClass().getResource("/sounds/steam_monster_summer_game.mp3").toString()));
+        music.setOnEndOfMedia(() -> music.seek(Duration.ZERO));
+        music.setVolume(0.1);
+//        music.play();
+
+        VBox musicBox = new VBox();
+        Label musicLabel = new Label("Music volume");
+
+        Slider musicVolumeSlider = new Slider(0,0.5,0.1);
+        musicVolumeSlider.setMaxWidth(200);
+        musicVolumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            music.setVolume((Double) newValue);
+        });
+
+        musicBox.getChildren().addAll(musicLabel,musicVolumeSlider);
+
+        optionBox.getChildren().add(musicBox);
+
         gameBox.setOnMouseClicked(event -> {
             System.out.println("game was clicked at: " + event.getX() + "," + event.getY());
-            getPlayerCharacter().setVelocity(0, 0);
-            getPlayerCharacter().setPosition(event.getX()- getPlayerCharacter().getWidth()/2, event.getY()- getPlayerCharacter().getHeight()/2);
+//            getPlayerCharacter().setVelocity(0, 0);
+//            getPlayerCharacter().setPosition(event.getX()- getPlayerCharacter().getWidth()/2, event.getY()- getPlayerCharacter().getHeight()/2);
+            double randLength = 100 + new Random().nextDouble()*(100+150);
+            createPlatform(event.getX()-randLength/2, event.getY() - ((double) 75 / 2),randLength);
             player.setOnGround(false);
             changeLevel();
             graphicsContext.clearRect(0,0,dimX,dimY);
@@ -75,22 +97,7 @@ public class Game {
             getInput().remove(keyInput);
         });
 
-        MediaPlayer music = new MediaPlayer(new Media(getClass().getResource("/sounds/steam_monster_summer_game.mp3").toString()));
-        music.setOnEndOfMedia(() -> music.seek(Duration.ZERO));
-        music.setVolume(0.1);
-//        music.play();
-
-        VBox musicBox = new VBox();
-        Label musicLabel = new Label("Music volume");
-
-        Slider musicVolumeSlider = new Slider(0,0.5,0.1);
-        musicVolumeSlider.setMaxWidth(200);
-        musicVolumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            music.setVolume((Double) newValue);
-        });
-
-        musicBox.getChildren().addAll(musicLabel,musicVolumeSlider);
-        root.getChildren().addAll(musicBox,getTimeLabel(), gameBox);
+        root.getChildren().addAll(optionBox,getTimeLabel(), gameBox);
     }
 
     public Scene getGameScene(){
@@ -113,7 +120,7 @@ public class Game {
             player.addVelocity(1,0);
         }
         changeLevel();
-        player.update(1000/ getUpdateRate());
+        player.update((double) 1000/ getUpdateRate());
     }
 
     private void changeLevel() {
@@ -130,15 +137,15 @@ public class Game {
         }
     }
 
-    public void createNewLevel(double startheight){
+    private void createNewLevel(double startheight){
         platforms.clear();
 
         Random rngLength = new Random();
 
         double randLength = 200 + (250 - 200)*rngLength.nextDouble();
-        double platformlength = randLength;
+//        double platformlength = randLength;
 
-//        createPlatform(0,startheight,randLength);
+        createPlatform(0,startheight,randLength);
 //
 //
 //
@@ -159,10 +166,10 @@ public class Game {
 //        }
 //
 //        randLength = 200 + (250 - 200)*rngLength.nextDouble();
-//        double randHeight = 100 + (200 - 100)*rngLength.nextDouble();
+        double randHeight = 100 + (200 - 100)*rngLength.nextDouble();
 //        platformlength += randLength;
 //
-//        createPlatform(getGameDimX()-randLength,randHeight,randLength);
+        createPlatform(getGameDimX()-randLength,randHeight,randLength);
 
 
         System.out.println("legth:" +randLength);
@@ -184,9 +191,9 @@ public class Game {
         return gravity;
     }
 
-    private player getPlayerCharacter() {
-        return player;
-    }
+//    private player getPlayerCharacter() {
+//        return player;
+//    }
 
     public void createPlatform(double x, double y, double length){
         platform pt = new platform(x,y,length);
@@ -194,7 +201,7 @@ public class Game {
         platforms.add(pt);
     }
 
-    public static boolean playerCollidesAfterX(double newx){
+    static boolean playerCollidesAfterX(double newx){
         for(platform pt: platforms){
             if(player.intersectsAfterXMovement(pt,newx)){
 
@@ -216,7 +223,7 @@ public class Game {
         return false;
     }
 
-    public static boolean playerCollidesAfterY(double newy){
+    static boolean playerCollidesAfterY(double newy){
         for(platform pt: platforms){
             if(player.intersectsAfterYMovement(pt,newy)){
 

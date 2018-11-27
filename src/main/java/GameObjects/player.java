@@ -13,7 +13,7 @@ public class player extends Sprite{
     private boolean onGround;
     private String status;
 
-    public player(double x, double y) {
+    player(double x, double y) {
         super(x, y);
         setImage("/images/ES2.png");
         status = "in air";
@@ -23,49 +23,49 @@ public class player extends Sprite{
         onGround = false;
     }
 
-    public void setStatus(String stat){
+    void setStatus(String stat){
         status = stat;
     }
 
-    public void setOnGround(boolean ground){
+    void setOnGround(boolean ground){
         this.onGround = ground;
     }
 
-    public boolean getOnGround(){
+    boolean getOnGround(){
         return onGround;
     }
 
-    public String getStatus(){
+    String getStatus(){
         return status;
     }
 
-    public double getVelocityX() {
+    double getVelocityX() {
         return velocityX;
     }
 
-    public double getVelocityY() {
+    double getVelocityY() {
         return velocityY;
     }
 
-    public void setVelocity(double velocityX, double velocityY) {
+    void setVelocity(double velocityX, double velocityY) {
         this.velocityX = velocityX;
         this.velocityY = velocityY;
     }
 
-    public void setVelocityX(double x){
+    void setVelocityX(double x){
         velocityX = x;
     }
 
-    public void setVelocityY(double y) {
+    void setVelocityY(double y) {
         velocityY = y;
     }
 
-    public void addVelocity(double x, double y){
+    void addVelocity(double x, double y){
         velocityX += x;
         velocityY += y;
     }
 
-    public void jump() {
+    void jump() {
         if(onGround) {
             System.out.println("JUMP!");
             addVelocity(0, -3.00);
@@ -73,7 +73,7 @@ public class player extends Sprite{
         }
     }
 
-    public void update(double time) {
+    void update(double time) {
 
         addVelocity(0,getGravity());
 
@@ -109,39 +109,39 @@ public class player extends Sprite{
             if(playerCollidesAfterY(newY)){
 
                 if(onGround && deltaY < 0) {
-                    status = "on platform";
+                    setStatus("on platform");
                     positionY += deltaY;
                 }
 //                if player is already on platform
             } else {
 
                 if(deltaY < 0){
-                    status = "jumping";
+                    setStatus("jumping");
                 } else {
-                    status = "falling";
+                    setStatus("falling");
                 }
 
                 positionY += deltaY;
             }
 //            if player is outside of gamescreen
         } else if (newY <=0){
-            status = "in air";
+            setStatus("in air");
             positionY =0;
 //            if player is on ground
         } else {
-            status = "on ground";
+            setStatus("on ground");
             positionY = getGameDimY() - height;
             velocityY = 0;
             onGround = true;
         }
     }
 
-    Rectangle2D getBoundaryAfterXMovement(double newx){
-        return new javafx.geometry.Rectangle2D( ((double) newx),positionY,width,height);
+    private Rectangle2D getBoundaryAfterXMovement(double newx){
+        return new javafx.geometry.Rectangle2D(newx,positionY,width,height);
     }
 
-    Rectangle2D getBoundaryAfterYMovement(double newy){
-        return new javafx.geometry.Rectangle2D(positionX,( (double) newy),width,height);
+    private Rectangle2D getBoundaryAfterYMovement(double newy){
+        return new javafx.geometry.Rectangle2D(positionX, newy,width,height);
     }
 
     boolean intersectsAfterXMovement(Sprite s, double newx) {
@@ -156,7 +156,7 @@ public class player extends Sprite{
         return "Position: "+positionX +","+positionY +" , Velocity: "+velocityX +","+velocityY;
     }
 
-    boolean intersects(Sprite s) {
-        return s.getBoundary().intersects(getBoundary());
-    }
+//    boolean intersects(Sprite s) {
+//        return s.getBoundary().intersects(getBoundary());
+//    }
 }

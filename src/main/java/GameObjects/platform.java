@@ -8,7 +8,7 @@ public class platform extends Sprite {
 
     private static double grassPixels = 6;
 
-    public platform(double x, double y, double length) {
+    platform(double x, double y, double length) {
         super(x, y);
         setPlatformImage(length);
     }
@@ -19,7 +19,7 @@ public class platform extends Sprite {
         height = img.getHeight();
     }
 
-    public static double getGrassPixelsHeight(){
+    static double getGrassPixelsHeight(){
         return grassPixels;
     }
 
@@ -28,12 +28,12 @@ public class platform extends Sprite {
         return new Rectangle2D(getPositionX(), getPositionY() + grassPixels,img.getWidth(),img.getHeight());
     }
 
-    public boolean intersects(Sprite s) {
-        return s.getBoundary().intersects(this.getBoundary());
-    }
+//    public boolean intersects(Sprite s) {
+//        return s.getBoundary().intersects(this.getBoundary());
+//    }
 
     public String toString() {
-        return "\nPosition: \n"+positionX +","+((double) positionX+width)+"\n"+
-                positionY + ""+","+((double) positionY+height);
+        return "\nPosition: \n"+positionX +","+(positionX +width)+"\n"+
+                positionY + ""+","+(positionY +height);
     }
 }

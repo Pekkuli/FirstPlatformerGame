@@ -26,8 +26,8 @@ public class FirstPlatformer extends Application {
         lastUpdate = 0L;
         time = 0;
 
-        final int dimX = 1200;
-        final int dimY = 750;
+        final int dimX = 800;
+        final int dimY = 500;
 
         debugLabel = new Label("Time: 0\n( ͡° ͜ʖ ͡°)");
 
